@@ -1,0 +1,58 @@
+# GitHub Pages にアプリを自動で公開するための設定ファイル
+#
+# このブランチに push されるたびに、
+#   1. 点数計算のテストを実行し
+#   2. 問題なければ GitHub Pages へ公開する
+# という流れが自動で走ります。
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+      - claude/mahjong-scoring-practice-5zm414
+  workflow_dispatch:   # GitHubの画面から手動でも実行できるようにする
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 公開処理が重ならないようにする
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  # 1. 点数計算が壊れていないか確認する
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: 点数計算のテストを実行
+        run: node tests/test.js
+
+  # 2. サイトを公開する
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pagesの設定を準備（未設定なら有効化を試みる）
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - name: サイトのファイルをまとめる
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+      - name: 公開
+        id: deployment
+        uses: actions/deploy-pages@v4

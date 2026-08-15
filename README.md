@@ -18,12 +18,25 @@
 
 これだけでブラウザが開いて遊べます。インターネット接続もサーバーも不要です。
 
-### スマホで使いたいとき（GitHub Pages で公開する）
+### スマホ（iPhone）で使う
 
-1. GitHubのリポジトリページ → `Settings` → 左メニューの `Pages`
-2. `Source` を **Deploy from a branch**、Branch を **main（またはこのブランチ）/ (root)** にして `Save`
-3. 数分後に表示される `https://ユーザー名.github.io/mahjong-score-practice/` をスマホで開く
-4. ブラウザの「ホーム画面に追加」をすると、アプリのように使えます
+公開URL 👉 **https://yuki-afroboy.github.io/mahjong-score-practice/**
+
+SafariでこのURLを開くだけで使えます。さらにアプリのように使いたい場合は、
+Safariの下部にある**共有ボタン（□に↑）→「ホーム画面に追加」**を選ぶと、
+アイコンから全画面で起動できるようになります（アドレスバーが消えます）。
+
+#### 公開のしくみ
+
+`.github/workflows/pages.yml` により、このブランチに変更をpushするたびに
+「テスト実行 → GitHub Pages へ公開」が自動で走ります。手動での作業は不要です。
+
+はじめて公開するときだけ、GitHub側で1回設定が必要な場合があります。
+`Actions` タブの `Deploy to GitHub Pages` が失敗している場合は、以下を確認してください。
+
+1. リポジトリの `Settings` → 左メニューの `Pages`
+2. `Build and deployment` の `Source` を **GitHub Actions** に変更
+3. `Actions` タブ → `Deploy to GitHub Pages` → `Re-run all jobs` を押す
 
 ---
 
