@@ -79,10 +79,11 @@ var MJ = (typeof MJ !== 'undefined') ? MJ : {};
   // ---------------------------------------------------------------
   // 索子（ソウズ）＝ 竹。1索だけは鳥
   // ---------------------------------------------------------------
-  function bamboo(cx, cy, h, color) {
+  function bamboo(cx, cy, h, color, angle) {
     var w = h * 0.22;
     var top = cy - h / 2, bottom = cy + h / 2;
-    return '<g fill="' + color + '">' +
+    var rot = angle ? ' transform="rotate(' + angle + ' ' + cx + ' ' + cy + ')"' : '';
+    return '<g fill="' + color + '"' + rot + '>' +
       '<rect x="' + (cx - w / 2) + '" y="' + top + '" width="' + w + '" height="' + h +
         '" rx="' + (w / 2) + '"/>' +
       '<rect x="' + (cx - w * 0.9) + '" y="' + (top + h * 0.24) + '" width="' + (w * 1.8) +
@@ -128,8 +129,12 @@ var MJ = (typeof MJ !== 'undefined') ? MJ : {};
     7: { h: 20, sticks: [[30, 15, RED],
                          [15, 42, GREEN], [30, 42, GREEN], [45, 42, GREEN],
                          [15, 68, GREEN], [30, 68, GREEN], [45, 68, GREEN]] },
-    8: { h: 28, sticks: [[12, 24, GREEN], [24, 24, GREEN], [36, 24, GREEN], [48, 24, GREEN],
-                         [12, 60, GREEN], [24, 60, GREEN], [36, 60, GREEN], [48, 60, GREEN]] },
+    // 八索だけは特別な形。竹を斜めに並べて、上半分が「W」、下半分が「M」になる
+    // （4本目の [ ] は傾ける角度。＋で「／」、−で「＼」の向き）
+    8: { h: 27, sticks: [[10, 24, GREEN, -28], [23, 24, GREEN, 28],
+                         [36, 24, GREEN, -28], [49, 24, GREEN, 28],
+                         [10, 60, GREEN, 28], [23, 60, GREEN, -28],
+                         [36, 60, GREEN, 28], [49, 60, GREEN, -28]] },
     9: { h: 20, sticks: [[15, 16, GREEN], [30, 16, GREEN], [45, 16, GREEN],
                          [15, 42, GREEN], [30, 42, GREEN], [45, 42, GREEN],
                          [15, 68, GREEN], [30, 68, GREEN], [45, 68, GREEN]] }
@@ -140,7 +145,8 @@ var MJ = (typeof MJ !== 'undefined') ? MJ : {};
     var conf = SOU_LAYOUT[n];
     var out = '';
     for (var i = 0; i < conf.sticks.length; i++) {
-      out += bamboo(conf.sticks[i][0], conf.sticks[i][1], conf.h, conf.sticks[i][2]);
+      out += bamboo(conf.sticks[i][0], conf.sticks[i][1], conf.h, conf.sticks[i][2],
+                    conf.sticks[i][3]);
     }
     return svg(out);
   }
