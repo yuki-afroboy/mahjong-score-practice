@@ -43,18 +43,12 @@
   // ---------------------------------------------------------------
   function tileEl(t, opts) {
     opts = opts || {};
-    var label = MJ.label(t);
     var el = document.createElement('div');
-    el.className = 'tile ' + label.suit + (opts.small ? ' small' : '') +
+    el.className = 'tile' + (opts.small ? ' small' : '') +
       (opts.tiny ? ' tiny' : '') + (opts.win ? ' win' : '');
-    if (label.suit === 'z') {
-      var honorClass = { '白': 'z-haku', '發': 'z-hatsu', '中': 'z-chun' }[label.main];
-      if (honorClass) el.classList.add(honorClass);
-      el.innerHTML = '<span class="honor">' + label.main + '</span>';
-    } else {
-      el.innerHTML = '<span class="num">' + label.main + '</span><span class="suit">' + label.sub + '</span>';
-    }
-    el.setAttribute('aria-label', MJ.name(t));
+    el.innerHTML = MJ.tileSVG(t);
+    el.setAttribute('role', 'img');
+    el.setAttribute('aria-label', MJ.readableName(t));
     return el;
   }
 

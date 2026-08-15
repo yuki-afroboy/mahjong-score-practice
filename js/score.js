@@ -311,7 +311,7 @@ var MJ = (typeof MJ !== 'undefined') ? MJ : {};
     var kind = ns.isYaochu(g.tile) ? '幺九牌' : '中張牌';
     var open = g.open ? '明' : '暗';
     var type = g.type === 'kan' ? '槓' : '刻';
-    return open + type + '子（' + kind + ' ' + ns.name(g.tile) + '）';
+    return open + type + '子（' + kind + ' ' + ns.readableName(g.tile) + '）';
   }
 
   var WAIT_LABEL = {

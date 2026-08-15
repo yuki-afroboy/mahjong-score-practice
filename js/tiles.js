@@ -71,6 +71,12 @@ var MJ = (typeof MJ !== 'undefined') ? MJ : {};
     return numberOf(t) + ['m', 'p', 's'][suitOf(t)];
   }
 
+  /** 「3萬」「5筒」「東」のような読み上げ用の名前（画面の読み上げ機能で使う） */
+  function readableName(t) {
+    if (isHonor(t)) return HONOR_LABELS[t - 27];
+    return numberOf(t) + ['萬子', '筒子', '索子'][suitOf(t)];
+  }
+
   /** ドラ表示牌 → 実際のドラ（次の牌） */
   function doraFromIndicator(t) {
     if (isWind(t)) return 27 + ((t - 27 + 1) % 4);      // 東→南→西→北→東
@@ -99,6 +105,7 @@ var MJ = (typeof MJ !== 'undefined') ? MJ : {};
   ns.isSimple = isSimple;
   ns.label = label;
   ns.name = name;
+  ns.readableName = readableName;
   ns.doraFromIndicator = doraFromIndicator;
   ns.toCounts = toCounts;
   ns.HONOR_LABELS = HONOR_LABELS;
