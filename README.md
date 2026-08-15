@@ -26,17 +26,34 @@ SafariでこのURLを開くだけで使えます。さらにアプリのよう�
 Safariの下部にある**共有ボタン（□に↑）→「ホーム画面に追加」**を選ぶと、
 アイコンから全画面で起動できるようになります（アドレスバーが消えます）。
 
-#### 公開のしくみ
+#### 初回だけ必要な設定（GitHubの画面での操作）
 
-`.github/workflows/pages.yml` により、このブランチに変更をpushするたびに
-「テスト実行 → GitHub Pages へ公開」が自動で走ります。手動での作業は不要です。
+公開の仕組み（`.github/workflows/pages.yml`）は用意済みで、pushのたびに
+「テスト実行 → GitHub Pages へ公開」が自動で走ります。
+ただし**最初の1回だけ**、GitHubの画面で次の設定が必要です。
 
-はじめて公開するときだけ、GitHub側で1回設定が必要な場合があります。
-`Actions` タブの `Deploy to GitHub Pages` が失敗している場合は、以下を確認してください。
+**① リポジトリを公開（Public）にする**
 
-1. リポジトリの `Settings` → 左メニューの `Pages`
-2. `Build and deployment` の `Source` を **GitHub Actions** に変更
-3. `Actions` タブ → `Deploy to GitHub Pages` → `Re-run all jobs` を押す
+GitHubの無料プランでは、非公開（Private）リポジトリのGitHub Pagesは使えません。
+
+1. リポジトリの `Settings` タブ
+2. ページ最下部の `Danger Zone` → `Change repository visibility` → `Change to public`
+3. 確認のためリポジトリ名を入力して実行
+
+※ 非公開のままにしたい場合は、GitHub Pro（有料プラン）が必要です。
+
+**② Pages を有効にする**
+
+1. `Settings` → 左メニューの `Pages`
+2. `Build and deployment` の `Source` を **GitHub Actions** に変更（自動で保存されます）
+
+**③ 公開を実行する**
+
+1. `Actions` タブ → 左の `Deploy to GitHub Pages` → 一番上の実行を開く
+2. 右上の `Re-run all jobs` を押す
+3. 緑のチェックになれば完了。1〜2分後に上記のURLが開けます
+
+以降はコードを変更してpushするだけで自動的に更新されます。
 
 ---
 

@@ -45,10 +45,10 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - name: Pagesの設定を準備（未設定なら有効化を試みる）
+      # ここでエラーになる場合は、GitHubの画面で
+      # Settings → Pages → Source を「GitHub Actions」にしてください（初回だけ）
+      - name: Pagesの設定を読み込む
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
       - name: サイトのファイルをまとめる
         uses: actions/upload-pages-artifact@v3
         with:
