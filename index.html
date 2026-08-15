@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f6b4f">
+<meta name="description" content="麻雀の点数計算をランダム問題で練習できるアプリ。符・翻・点数の計算過程も解説します。">
+<title>麻雀 点数計算ドリル</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🀄</text></svg>">
+</head>
+<body>
+
+<header class="header">
+  <h1>麻雀 点数計算ドリル</h1>
+  <div class="stats" id="stats">
+    <span><b id="statCorrect">0</b>/<span id="statTotal">0</span> 正解</span>
+    <span>連続 <b id="statStreak">0</b></span>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- 問題エリア -->
+  <section class="board" aria-label="問題">
+    <div class="situation" id="situation"></div>
+
+    <div class="hand-area" id="handArea"></div>
+
+    <div class="melds" id="melds"></div>
+  </section>
+
+  <!-- 回答エリア -->
+  <section class="ask" id="askArea">
+    <p class="ask-title">この手は<strong>何点？</strong></p>
+    <p class="ask-note" id="askNote"></p>
+
+    <div class="answer-display" id="answerDisplay">
+      <span id="answerText" class="placeholder">点数を入力</span><span class="unit" id="answerUnit" hidden>点</span>
+    </div>
+
+    <div class="keypad" id="keypad">
+      <button type="button" data-key="1">1</button>
+      <button type="button" data-key="2">2</button>
+      <button type="button" data-key="3">3</button>
+      <button type="button" data-key="4">4</button>
+      <button type="button" data-key="5">5</button>
+      <button type="button" data-key="6">6</button>
+      <button type="button" data-key="7">7</button>
+      <button type="button" data-key="8">8</button>
+      <button type="button" data-key="9">9</button>
+      <button type="button" data-key="00">00</button>
+      <button type="button" data-key="0">0</button>
+      <button type="button" data-key="del" class="key-sub" aria-label="1文字消す">⌫</button>
+    </div>
+
+    <div class="actions">
+      <button type="button" id="submitBtn" class="btn btn-primary">答え合わせ</button>
+      <button type="button" id="giveupBtn" class="btn btn-ghost">わからない</button>
+    </div>
+  </section>
+
+  <!-- 答え・解説エリア -->
+  <section class="result hidden" id="result" aria-live="polite">
+    <div class="verdict" id="verdict"></div>
+
+    <div class="answer-box">
+      <div class="answer-main" id="answerMain"></div>
+      <div class="answer-sub" id="answerSub"></div>
+    </div>
+
+    <details class="explain" open>
+      <summary>手牌の分け方</summary>
+      <div class="parsed" id="parsed"></div>
+    </details>
+
+    <details class="explain" id="explainYaku" open>
+      <summary>役と翻（ハン）</summary>
+      <ul class="yaku-list" id="yakuList"></ul>
+    </details>
+
+    <details class="explain" id="explainFu" open>
+      <summary>符（フ）の内訳</summary>
+      <ul class="fu-list" id="fuList"></ul>
+    </details>
+
+    <details class="explain" open>
+      <summary>点数の出し方</summary>
+      <div class="formula" id="formula"></div>
+    </details>
+
+    <button type="button" id="nextBtn" class="btn btn-primary btn-next">次の問題 →</button>
+  </section>
+
+  <!-- 設定 -->
+  <details class="settings">
+    <summary>設定</summary>
+    <div class="setting-row">
+      <span class="setting-label">難易度</span>
+      <div class="segmented" id="difficulty">
+        <button type="button" data-value="easy">やさしい</button>
+        <button type="button" data-value="normal">ふつう</button>
+        <button type="button" data-value="hard">むずかしい</button>
+      </div>
+    </div>
+    <div class="setting-row">
+      <span class="setting-label">自分の立場</span>
+      <div class="segmented" id="role">
+        <button type="button" data-value="random">ランダム</button>
+        <button type="button" data-value="dealer">親</button>
+        <button type="button" data-value="nondealer">子</button>
+      </div>
+    </div>
+    <p class="setting-note">
+      やさしい＝門前（鳴きなし）・ドラなし。ふつう＝鳴き・ドラあり。むずかしい＝カンや役満も出ます。
+    </p>
+    <button type="button" id="resetStats" class="btn btn-ghost btn-small">成績をリセット</button>
+  </details>
+
+  <details class="settings">
+    <summary>点数計算のおさらい</summary>
+    <div class="cheat">
+      <p><b>手順</b>：①役を数えて「翻」を出す → ②「符」を数える → ③点数表 or 計算式にあてはめる</p>
+      <p><b>計算式</b>：基本点 ＝ 符 × 2<sup>(2＋翻)</sup>　→　子のロンは ×4、親のロンは ×6（100点未満は切り上げ）</p>
+      <p><b>ツモ</b>：子は「子から基本点×1、親から基本点×2」、親は「全員から基本点×2」</p>
+      <p><b>符の基本</b>：副底20符／門前ロン+10符／ツモ+2符／暗刻は明刻の2倍／幺九牌の刻子は中張牌の2倍／カンチャン・ペンチャン・単騎待ち+2符／役牌の雀頭+2符 → 最後に10符単位で切り上げ</p>
+      <p><b>満貫以上</b>：5翻＝満貫、6〜7翻＝跳満、8〜10翻＝倍満、11〜12翻＝三倍満、13翻〜＝数え役満</p>
+    </div>
+  </details>
+
+</main>
+
+<footer class="footer">
+  <p>ルールは一般的な日本のリーチ麻雀（アリアリ）に準拠。積み棒・供託は含みません。</p>
+</footer>
+
+<script src="js/tiles.js"></script>
+<script src="js/score.js"></script>
+<script src="js/generator.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
