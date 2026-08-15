@@ -96,28 +96,76 @@ var MJ = (typeof MJ !== 'undefined') ? MJ : {};
   }
 
   /**
-   * 一索の鳥（雀）
-   * 本物の牌に合わせて、頭が右上・くちばしが右向き・長い尾が左下、
-   * 足元に台がある細身の姿にしている。
+   * 一索の孔雀（クジャク）
+   * 上＝横に広がった緑の羽（細い羽先＋目玉模様の丸）、
+   * 下＝正面を向いた鳥（左右に広げた扇形の翼）と赤い足。
    */
   function bird() {
-    return '<g>' +
-      // 体と尾（頭の下から左下へ、一続きの細長い形）
-      '<path d="M44 27 C37 31 30 38 22 46 C15 52 8 58 2 62.5 L5.5 67 ' +
-        'C13 65 20 62.5 27 60 C34 57.5 41 55 45.5 49.5 C48.5 45 49 36.5 46.5 30 Z" fill="' +
-        GREEN + '"/>' +
-      // 羽（背に沿った模様）
-      '<path d="M40 36 C33 41 25 47 17 53 C24 50 32 46 40 41 Z" fill="#fff" opacity=".45"/>' +
-      // 足と台
-      '<rect x="33" y="55" width="1.9" height="14" fill="' + GREEN + '"/>' +
-      '<rect x="38.5" y="54" width="1.9" height="15" fill="' + GREEN + '"/>' +
-      '<path d="M25 68.5 L47 68.5 L50 72 L22 72 Z" fill="' + GREEN + '"/>' +
-      // 頭
-      '<circle cx="46" cy="26" r="6.4" fill="' + GREEN + '"/>' +
-      '<circle cx="47.8" cy="24.2" r="1.6" fill="#fff"/>' +
-      // くちばし
-      '<path d="M51 22.5 L60 26.5 L51 30 Z" fill="' + RED + '"/>' +
-      '</g>';
+    var out = '';
+    var fx = 30, fy = 24;   // 羽の中心
+    var i;
+
+    // 羽の先端（放射状の細い羽）
+    for (i = 0; i < 31; i++) {
+      var deg = -190 + i * (200 / 30);
+      var rad = deg * Math.PI / 180;
+      var x1 = fx + Math.cos(rad) * 22, y1 = fy + Math.sin(rad) * 18.5;
+      var x2 = fx + Math.cos(rad) * 30, y2 = fy + Math.sin(rad) * 26;
+      out += '<line x1="' + x1.toFixed(1) + '" y1="' + y1.toFixed(1) + '" x2="' +
+        x2.toFixed(1) + '" y2="' + y2.toFixed(1) + '" stroke="' + GREEN +
+        '" stroke-width="1.5" stroke-linecap="round"/>';
+    }
+
+    // 羽の下に垂れる部分
+    out += '<g stroke="' + GREEN + '" stroke-width="1.6" stroke-linecap="round">' +
+           '<path d="M23 42 L22 52"/><path d="M27.5 43 L27 53"/>' +
+           '<path d="M32.5 43 L33 53"/><path d="M37 42 L38 52"/>' +
+           '</g>';
+
+    // 羽の本体（横に広い山型）
+    out += '<path d="M30 3 C44 3 54 11 55 22 C55.5 31 51 39 45 43 C40 46 35 47 30 47 ' +
+           'C25 47 20 46 15 43 C9 39 4.5 31 5 22 C6 11 16 3 30 3 Z" fill="' + GREEN + '"/>';
+
+    // 目玉模様（白い丸＋中央の緑の点）
+    var rows = [[12, [24, 36]], [21.5, [17, 30, 43]], [31, [12, 24, 36, 48]],
+                [40, [18.5, 30, 41.5]]];
+    for (var r = 0; r < rows.length; r++) {
+      var y = rows[r][0], xs = rows[r][1];
+      for (var c = 0; c < xs.length; c++) {
+        out += '<circle cx="' + xs[c] + '" cy="' + y + '" r="4.1" fill="#fff"/>' +
+               '<circle cx="' + xs[c] + '" cy="' + y + '" r="1.7" fill="' + GREEN + '"/>';
+      }
+    }
+
+    // 左右に広げた扇形の翼（先が上外に尖る）
+    out += '<g fill="#fff" stroke="' + INK + '" stroke-width="1.5" stroke-linejoin="round">' +
+           '<path d="M3 53 C0 61 1 71 6 76 C12 80 21 77 26 72 C21 67 13 58 3 53 Z"/>' +
+           '<path d="M57 53 C60 61 59 71 54 76 C48 80 39 77 34 72 C39 67 47 58 57 53 Z"/>' +
+           '</g>';
+    out += '<g fill="none" stroke="' + INK + '" stroke-width="1" stroke-linecap="round">' +
+           '<path d="M24 70 C17 67 9 62 4 56"/><path d="M22.5 74 C16 73 10 70 5.5 65"/>' +
+           '<path d="M36 70 C43 67 51 62 56 56"/><path d="M37.5 74 C44 73 50 70 54.5 65"/>' +
+           '</g>';
+
+    // 体と頭
+    out += '<ellipse cx="30" cy="71" rx="9.5" ry="6.6" fill="#fff" stroke="' + INK +
+             '" stroke-width="1.6"/>' +
+           '<circle cx="30" cy="60" r="4.8" fill="#fff" stroke="' + INK + '" stroke-width="1.6"/>' +
+           '<circle cx="31.2" cy="58.7" r="1.2" fill="' + INK + '"/>' +
+           '<path d="M26 60.5 L21 62 L26 63.5 Z" fill="' + INK + '"/>';
+
+    // 頭のそばの赤い飾り
+    out += '<g stroke="' + RED + '" stroke-width="1.7" stroke-linecap="round" fill="none">' +
+           '<path d="M22 53 L15 56"/><path d="M23 56.5 L17 59.5"/>' +
+           '</g>';
+
+    // 赤い足
+    out += '<g stroke="' + RED + '" stroke-width="1.6" stroke-linecap="round" fill="none">' +
+           '<path d="M26 77 L26 81 M22.5 84 L26 81 L29.5 84 M26 81 L26 84.5"/>' +
+           '<path d="M34 77 L34 81 M30.5 84 L34 81 L37.5 84 M34 81 L34 84.5"/>' +
+           '</g>';
+
+    return '<g>' + out + '</g>';
   }
 
   var SOU_LAYOUT = {
